@@ -13,10 +13,17 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ApiResource(
  *   normalizationContext={"groups"={"simpleArticles"}},
+ *   collectionOperations={
+ *     "get",
+ *     "post"={"security"="is_granted('ROLE_USER')"}
+ *   },
  *   itemOperations={
  *     "get"={
  *       "normalization_context"={"groups"={"fullArticle"}}
- *      },"put","patch","delete"
+ *      },
+ *     "delete"={"security"="is_granted('ROLE_USER')"},
+ *     "put"={"security"="is_granted('ROLE_USER')"},
+ *     "patch"={"security"="is_granted('ROLE_USER')"}
  *   }
  * )
  * @ORM\Entity(repositoryClass=ArticleRepository::class)
