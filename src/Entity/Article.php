@@ -2,14 +2,23 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\ArticleRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ArticleRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *   normalizationContext={"groups"={"simpleArticles"}},
+ *   itemOperations={
+ *     "get"={
+ *       "normalization_context"={"groups"={"fullArticle"}}
+ *      },"put","patch","delete"
+ *   }
+ * )
  * @ORM\Entity(repositoryClass=ArticleRepository::class)
  */
 class Article
@@ -18,36 +27,44 @@ class Article
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"simpleArticles"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"simpleArticles"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"simpleArticles"})
      */
     private $slug;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"simpleArticles"})
      */
     private $content;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"simpleArticles"})
      */
     private $author;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     * @Groups({"simpleArticles"})
      */
     private $date;
 
     /**
      * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="article")
+     * @Groups({"fullArticle"})
+     * @ApiSubresource
      */
     private $comments;
 
